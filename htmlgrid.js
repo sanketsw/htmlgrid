@@ -17,6 +17,7 @@
     function tableCreate(id, obj) {
         var div = document.getElementById(id);
         var tbl = document.createElement('table');
+        tbl.className += " htmlgrid-table";
         // tbl.style.width = '100px';
         tbl.style.border = '1px solid black';
 
@@ -29,8 +30,9 @@
                 var td = tr.insertCell();
                 td.appendChild(document.createTextNode('Cell'));
                 td.style.border = '1px solid black';
+                td.className += " htmlgrid-td"
                 if (column.editable == false) {
-                    td.className += "readOnlyCell";
+                    td.className += " readOnlyCell";
                 } else {
                     td.setAttribute('tabindex', '0');
                 }
@@ -43,14 +45,13 @@
         var tr = tbl.tHead.children[0];
         for (var j = 0; j < noOfColumns; j++) {
             var th = document.createElement('th');;
-            var text = "<th>" + obj.columns[j].title;
+            var text = obj.columns[j].title;
             if (obj.columns[j].filter && obj.columns[j].filter.type == "text") {
                 text += '<br/><input type="text" class="filter" placeholder="Filter by text">';
             }
-            text += "</th>"
+            th.className += " htmlgrid-th";
             th.innerHTML = text;
             tr.appendChild(th);
-            alert(th.outerHTML)
         }
         div.appendChild(tbl);
     }
@@ -58,7 +59,7 @@
     /* Sort Function */
     $(function() {
         //grab all header rows
-        $('th').each(function(column) {
+        $('.htmlgrid-th').each(function(column) {
             $(this).addClass('sortable').click(function() {
                 var findSortKey = function($cell) {
                     return $cell.find('.sort-key').text().toUpperCase() + ' ' + $cell.text().toUpperCase();
@@ -97,17 +98,17 @@
 
                 //add the rows in the correct order to the bottom of the table
                 $.each($rows, function(index, row) {
-                    $('tbody').append(row);
+                    $('.htmlgrid-table > tbody').append(row);
                     row.sortKey = null;
                 });
 
                 //identify the collumn sort order
-                $('th').removeClass('sorted-asc sorted-desc');
+                $('.htmlgrid-th').removeClass('sorted-asc sorted-desc');
                 var $sortHead = $('th').filter(':nth-child(' + (column + 1) + ')');
                 sortDirection == 1 ? $sortHead.addClass('sorted-asc') : $sortHead.addClass('sorted-desc');
 
                 //identify the collum to be sorted by
-                $('td').removeClass('sorted').filter(':nth-child(' + (column + 1) + ')').addClass('sorted');
+                $('.htmlgrid-td').removeClass('sorted').filter(':nth-child(' + (column + 1) + ')').addClass('sorted');
             });
         });
 
@@ -148,7 +149,7 @@
 
         var isMouseDown = false;
 
-        $("td")
+        $(".htmlgrid-td")
             .mousedown(function() {
                 isMouseDown = true;
                 selectCell(this, 'deselectAll');
@@ -173,6 +174,23 @@
 
         var editMode = false;
 
+        function getNextValidRow(cell) {
+            var nextRow = $(cell).parent().next();
+            while (nextRow.css('display') == 'none') {
+                nextRow = $(nextRow).next();
+            }
+            return nextRow;
+        }
+
+        function getPrevValidRow(cell) {
+            var nextRow = $(cell).parent().prev();
+            while (nextRow.css('display') == 'none') {
+                nextRow = $(nextRow).prev();
+            }
+            return nextRow;
+        }
+
+
         function moveToNextCell(cell, shiftKey, direction, edit) {
             var nextCell = null;
             // console.log(shiftKey);
@@ -185,7 +203,7 @@
                     nextCell = $(nextCell).prev();
                 }
                 if (nextCell.html() == null) {
-                    nextCell = $(cell).parent().prev().find(">:last-child");
+                    nextCell = $(getPrevValidRow(cell)).find(">:last-child");
                     while (nextCell.hasClass("readOnlyCell")) {
                         nextCell = $(nextCell).prev();
                     }
@@ -197,7 +215,7 @@
                     nextCell = $(nextCell).next();
                 }
                 if (nextCell.html() == null) {
-                    nextCell = $(cell).parent().next().find(">:first-child");
+                    nextCell = $(getNextValidRow(cell)).find(">:first-child");
                     while (nextCell.hasClass("readOnlyCell")) {
                         nextCell = $(nextCell).next();
                     }
@@ -205,16 +223,25 @@
             } else if (direction == 38) {
                 // Up arrow 38
                 var cellIndex = $(cell).prevAll().length + 1;
-                nextCell = $(cell).parent().prev().find(">:nth-child(" + cellIndex + ")");
+                nextCell = $(getPrevValidRow(cell)).find(">:nth-child(" + cellIndex + ")");
             } else if (direction == 40) {
                 // Down Arrow 40
                 var cellIndex = $(cell).prevAll().length + 1;
-                nextCell = $(cell).parent().next().find(">:nth-child(" + cellIndex + ")");
+                nextCell = $(getNextValidRow(cell)).find(">:nth-child(" + cellIndex + ")");
             }
-            if (nextCell != null) {
-                selectCell(nextCell, 'deselectAll');
-                if (edit) editCell(nextCell);
+            if (nextCell.html() == null) {
+                nextCell = cell;
             }
+            selectCell(nextCell, 'deselectAll');
+            if (edit) editCell(nextCell);
+
+        }
+
+        $.fn.focusTextToEnd = function() {
+            this.focus();
+            var $thisVal = this.val();
+            this.val('').val($thisVal);
+            return this;
         }
 
         function editCell(cell, firstKey) {
@@ -228,7 +255,7 @@
             }
             $(cell).html('<input type="text" value=' + val + ' />');
             setTimeout(function() {
-                $(cell).find(">:first-child").focus().val(val);;
+                $(cell).find(">:first-child").focusTextToEnd();
             }, 100);
 
             $(cell).find(">:first-child").keydown(function(e) {
@@ -261,13 +288,13 @@
         }
 
 
-        $("td").dblclick(function() {
+        $(".htmlgrid-td").dblclick(function() {
             editCell(this, null);
         });
 
 
 
-        $("td").keydown(function(e) {
+        $(".htmlgrid-td").keydown(function(e) {
             if (!editMode) {
                 var keyCode = e.keyCode || e.which;
                 if (e.shiftKey || keyCode == 27 || keyCode == 38 || keyCode == 40 || keyCode == 9 || keyCode == 37 || keyCode == 39) {
@@ -292,7 +319,7 @@
 
         function filter(input) {
             var $input = $(input),
-                $table = $input.parents('table'),
+                $table = $input.parents('.htmlgrid-table'),
                 $rows = $table.find('tbody tr');
             var column = $table.find('th').index($input.parents('th'));
             inputContent = $input.val().toLowerCase();
