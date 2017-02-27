@@ -1,0 +1,46 @@
+table td {
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  vertical-align: middle;
+  background-color: white;
+}
+
+table tr.highlighted {
+  background-color: #999;
+  color: red;
+}
+
+table td.selectedCell {
+  background-color: #999;
+  color: blue;
+}
+
+table td.readOnlyCell {
+  background-color: beige;
+}
+
+table td.cellEditing {
+  background-color: black;
+  color: blue;
+}
+
+root {
+  display: block;
+}
+
+th.sortable {
+  color: #666;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+th.sortable:hover {
+  color: black;
+}
+
+th.sorted-asc,
+th.sorted-desc {
+  color: black;
+  background-color: cadetblue;
+}

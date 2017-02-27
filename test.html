@@ -3,377 +3,97 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title></title>
-	<!-- <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" /> -->
-	<script src="jquery.min.js"></script>
-	<!-- <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script> -->
-
-	<style type="text/css" media="screen">
-		table td {
-			width: 100px;
-			height: 100px;
-			text-align: center;
-			vertical-align: middle;
-			background-color: white;
-		}
-
-		table tr.highlighted {
-			background-color: #999;
-			color: red;
-		}
-
-		table td.selectedCell {
-			background-color: #999;
-			color: blue;
-		}
-
-		table td.readOnlyCell {
-			background-color: beige;
-		}
-
-		table td.cellEditing {
-			background-color: black;
-			color: blue;
-		}
-
-		root {
-			display: block;
-		}
-
-		th.sortable {
-			color: #666;
-			cursor: pointer;
-			text-decoration: underline;
-		}
-
-		th.sortable:hover {
-			color: black;
-		}
-
-		th.sorted-asc,
-		th.sorted-desc {
-			color: black;
-			background-color: cadetblue;
-		}
-	</style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="jquery.min.js"></script>
+    <link rel="stylesheet" href="htmlgrid.css" />
 </head>
 
 <body>
-	<table cellpadding="0" cellspacing="1" id="our_table">
 
-		<thead>
-			<tr>
-				<th class="count">Name <br/><input type="text" class="filter" placeholder="Filter by text"></th>
-				<th>Salary <br/><input type="text" class="filter" placeholder="Filter by text"></th>
-				<th class="numeric">Extension <br/><input type="text" class="filter" placeholder="Filter by text"></th>
-				<th>Start date <br/><input type="text" class="filter" placeholder="Filter by text"></th>
-				<th>Start date (American) <br/><input type="text" class="filter" placeholder="Filter by text"></th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td class="readOnlyCell">Bloggs, Fred</td>
-				<td tabindex="0">$12000.00</td>
-				<td tabindex="0">1353</td>
-				<td tabindex="0">18/08/2003</td>
-				<td tabindex="0">08/18/2003</td>
-			</tr>
-			<tr>
-				<td class="readOnlyCell">Turvey, Kevin</td>
-				<td tabindex="0">$191200.00</td>
-				<td tabindex="0">2342</td>
-				<td tabindex="0">02/05/1979</td>
-				<td tabindex="0">05/02/1979</td>
-			</tr>
-			<tr>
-				<td class="readOnlyCell">Mbogo, Arnold</td>
-				<td tabindex="0">$32010.12</td>
-				<td tabindex="0">2755</td>
-				<td tabindex="0">09/08/1998</td>
-				<td tabindex="0">08/09/1998</td>
-			</tr>
-			<tr>
-				<td class="readOnlyCell">Shakespeare, Bill</td>
-				<td tabindex="0">$122000.00</td>
-				<td tabindex="0">3211</td>
-				<td tabindex="0">12/11/1961</td>
-				<td tabindex="0">11/12/1961</td>
-			</tr>
-			<tr>
-				<td class="readOnlyCell">Shakespeare, Hamnet</td>
-				<td tabindex="0">$9000</td>
-				<td tabindex="0">9005</td>
-				<td tabindex="0">01/01/2002</td>
-				<td tabindex="0">01/01/2002</td>
-			</tr>
-			<tr>
-				<td class="readOnlyCell">Fitz, Marvin</td>
-				<td tabindex="0">$3300</td>
-				<td tabindex="0">5554</td>
-				<td tabindex="0">22/05/1995</td>
-				<td tabindex="0">05/22/1995</td>
-			</tr>
-		</tbody>
-	</table>
+    <div id="example-table"></div>
 
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"></script>
-	<script type="text/javascript" charset="utf-8">
-		(function($) {
-
-			/* Sort Function */
-
-			//grab all header rows
-			$('th').each(function(column) {
-				$(this).addClass('sortable').click(function() {
-					var findSortKey = function($cell) {
-						return $cell.find('.sort-key').text().toUpperCase() + ' ' + $cell.text().toUpperCase();
-
-					};
-					var sortDirection = $(this).is('.sorted-asc') ? -1 : 1;
-					var $rows = $(this).parent().parent().parent().find('tbody tr').get();
-					var bob = 0;
-					//loop through all the rows and find
-					$.each($rows, function(index, row) {
-						row.sortKey = findSortKey($(row).children('td').eq(column));
-					});
-
-					//compare and sort the rows alphabetically or numerically
-					$rows.sort(function(a, b) {
-						if (a.sortKey.indexOf('-') == -1 && (!isNaN(a.sortKey) && !isNaN(a.sortKey))) {
-							//Rough Numeracy check
-
-							if (parseInt(a.sortKey) < parseInt(b.sortKey)) {
-								return -sortDirection;
-							}
-							if (parseInt(a.sortKey) > parseInt(b.sortKey)) {
-								return sortDirection;
-							}
-
-						} else {
-							if (a.sortKey < b.sortKey) {
-								return -sortDirection;
-							}
-							if (a.sortKey > b.sortKey) {
-								return sortDirection;
-							}
-						}
-						return 0;
-					});
-
-					//add the rows in the correct order to the bottom of the table
-					$.each($rows, function(index, row) {
-						$('tbody').append(row);
-						row.sortKey = null;
-					});
-
-					//identify the collumn sort order
-					$('th').removeClass('sorted-asc sorted-desc');
-					var $sortHead = $('th').filter(':nth-child(' + (column + 1) + ')');
-					sortDirection == 1 ? $sortHead.addClass('sorted-asc') : $sortHead.addClass('sorted-desc');
-
-					//identify the collum to be sorted by
-					$('td').removeClass('sorted').filter(':nth-child(' + (column + 1) + ')').addClass('sorted');
-				});
-			});
-
-			/* Select Deselect Function */
-
-			var selectedRows = [];
-			var selectedCell;
-
-			function deselectAll(row) {
-				$(row).parent().find('tr').removeClass("highlighted");
-				selectedRows = [];
-			}
-
-			function selectRow(row) {
-				selectedRows[row] = row;
-				$(row).addClass("highlighted");
-			}
-
-			function selectCell(cell, deselectAllFlag) {
-				// console.log(selectedCell);
-				// console.log(cell);
-				if (selectedCell != cell) {
-					if (deselectAllFlag == 'deselectAll') {
-						deselectAll($(cell).parent());
-					}
-					$(selectedCell).removeClass("selectedCell");
-					$(selectedCell).find(">:first-child").blur();
-
-					$(cell).addClass("selectedCell");
-					selectedCell = cell;
-					setTimeout(function() {
-						$(cell).focus();
-					}, 100);
-					selectRow($(cell).parent());
-				}
-			}
-
-			var isMouseDown = false;
-			$("td")
-				.mousedown(function() {
-					isMouseDown = true;
-					selectCell(this, 'deselectAll');
-					return false; // prevent text selection
-				})
-				.mouseover(function() {
-					if (isMouseDown) {
-						// console.log($(this).html());
-						selectRow($(this).parent());
-					}
-				})
-				.bind("selectstart", function() {
-					return false; // prevent text selection in IE
-				});
-
-			$(document)
-				.mouseup(function() {
-					isMouseDown = false;
-				});
-
-			/* Inline Edit function */
-
-			var editMode = false;
-
-			function moveToNextCell(cell, shiftKey, direction, edit) {
-				var nextCell = null;
-				// console.log(shiftKey);
-				// console.log(direction);
-				if ((shiftKey && direction == 9) || direction == 37) {
-					// Shift Tab event.shiftKey &&  event.keyCode == 9
-					// Left arrow 37
-					var nextCell = $(cell).prev();
-					while(nextCell.html() != null && nextCell.hasClass("readOnlyCell")){
-						nextCell = $(nextCell).prev();
-					}
-					if (nextCell.html() == null) {
-						nextCell = $(cell).parent().prev().find(">:last-child");
-						while(nextCell.hasClass("readOnlyCell")){
-							nextCell = $(nextCell).prev();
-						}
-					}
-				} else if (direction == 13 || direction == 9 || direction == 39) {
-					// Enter 13 Tab 9 Right Arrow 39
-					var nextCell = $(cell).next();
-					while(nextCell.html() != null && nextCell.hasClass("readOnlyCell")){
-						nextCell = $(nextCell).next();
-					}
-					if (nextCell.html() == null) {
-						nextCell = $(cell).parent().next().find(">:first-child");
-						while(nextCell.hasClass("readOnlyCell")){
-							nextCell = $(nextCell).next();
-						}
-					}
-				} else if (direction == 38) {
-					// Up arrow 38
-					var cellIndex = $(cell).prevAll().length + 1;
-					nextCell = $(cell).parent().prev().find(">:nth-child(" + cellIndex + ")");
-				} else if (direction == 40) {
-					// Down Arrow 40
-					var cellIndex = $(cell).prevAll().length + 1;
-					nextCell = $(cell).parent().next().find(">:nth-child(" + cellIndex + ")");
-				}
-				if (nextCell != null) {
-					selectCell(nextCell, 'deselectAll');
-					if (edit) editCell(nextCell);
-				}
-			}
-
-			function editCell(cell, firstKey) {
-				if ($(cell).hasClass("readOnlyCell") || $(cell).hasClass("cellEditing")) return;
-				if (!editMode) editMode = true;
-				var OriginalContent = $(cell).text();
-				$(cell).addClass("cellEditing");
-				var val = OriginalContent;
-				if (firstKey) {
-					val = String.fromCharCode(firstKey);
-				}
-				$(cell).html('<input type="text" value=' + val + ' />');
-				setTimeout(function() {
-					$(cell).find(">:first-child").focus().val(val);;
-				}, 100);
-
-				$(cell).find(">:first-child").keydown(function(e) {
-					var keyCode = e.keyCode || e.which;
-					if (keyCode == 13 || keyCode == 38 || keyCode == 40 || keyCode == 9 || keyCode == 37 || keyCode == 39) {
-						// navigation keys
-						var newContent = $(this).val();
-						$(cell).text(newContent);
-						$(cell).removeClass("cellEditing");
-						moveToNextCell(cell, e.shiftKey, keyCode, true);
-					} else if (keyCode == 27) {
-						//escape
-						$(cell).text(OriginalContent);
-						$(cell).removeClass("cellEditing");
-						setTimeout(function() {
-							$(cell).focus();
-						}, 100);
-						editMode = false;
-					}
-				});
-
-				// lose focus
-				$(cell).find(">:first-child").blur(function() {
-					// console.log('blur')
-					var newContent = $(this).val();
-					$(cell).text(newContent);
-					$(cell).removeClass("cellEditing");
-					editMode = false;
-				});
-			}
-
-			$(function() {
-				$("td").dblclick(function() {
-					editCell(this, null);
-				});
-			});
-
-			$(function() {
-				$("td").keydown(function(e) {
-					if (!editMode) {
-						var keyCode = e.keyCode || e.which;
-						if (e.shiftKey || keyCode == 27 || keyCode == 38 || keyCode == 40 || keyCode == 9 || keyCode == 37 || keyCode == 39) {
-							moveToNextCell(this, e.shiftKey, keyCode, false)
-						} else {
-							keyCode = keyCode == 13 ? null : keyCode;
-							// console.log(keyCode);
-							editCell(this, keyCode);
-						}
-					}
-				});
-			});
-
-			/* FILTER FUNCTION */
-			// Refernce http://bootsnipp.com/snippets/featured/panel-table-with-filters-per-column
-
-			$('.filter').keyup(function() {
-				filter(this);
-			});
-
-			function filter(input) {
-				var $input = $(input),
-					$table = $input.parents('table'),
-					$rows = $table.find('tbody tr');
-				var column = $table.find('th').index($input.parents('th'));
-				inputContent = $input.val().toLowerCase();
-				var $filteredRows = $rows.filter(function() {
-					var value = $(this).find('td').eq(column).text().toLowerCase();
-					if (value.indexOf(inputContent) == -1) {
-						$(this).css('display', 'none');
-					} else {
-						$(this).css('display', '');
-					}
-				});
-			}
-
-			/* CALCULATE SUMMARY function */
+    <script type="text/javascript" src="htmlgrid.js"></script>
 
 
-			// end of root
-		})(jQuery);
-	</script>
+    <script type="text/javascript" charset="utf-8">
+        // $(document).ready(function() {
+        var obj = {
+            columns: [{
+                title: "Name",
+                field: "name",
+                dataType: "string",
+                editable: false,
+                filter: {
+                    type: "text"
+                }
+            }, {
+                title: "Salary",
+                field: "salary",
+                dataType: "string",
+                filter: {
+                    type: "text"
+                }
+            }, {
+                title: "Extension",
+                field: "extension",
+                dataType: "numeric",
+                filter: {
+                    type: "minmax"
+                }
+            }, {
+                title: "Start Date",
+                field: "startDate",
+                dataType: "date"
+            }, {
+                title: "Start Date (USA)",
+                field: "startDateAmerican",
+                dataType: "date"
+            }],
+            data: [{
+                name: "Bloggs, Fred",
+                salary: "$12000.00",
+                extension: "1353",
+                startDate: "18/08/2003",
+                startDateAmerican: "08/18/2003"
+            }, {
+                name: "Turvey, Kevin",
+                salary: "$191200.00",
+                extension: "2342",
+                startDate: "02/05/1979",
+                startDateAmerican: "05/02/1979"
+            }, {
+                name: "Mbogo, Arnold",
+                salary: "$32010.12",
+                extension: "2755",
+                startDate: "09/08/1998",
+                startDateAmerican: "08/09/1998"
+            }, {
+                name: "Shakespeare, Bill",
+                salary: "$122000.00",
+                extension: "3211",
+                startDate: "12/11/1961",
+                startDateAmerican: "11/12/1961"
+            }, {
+                name: "Shakespeare, Hamnet",
+                salary: "$9000",
+                extension: "9005",
+                startDate: "01/01/2002",
+                startDateAmerican: "01/01/2002"
+            }, {
+                name: "Fitz, Marvin",
+                salary: "$3300",
+                extension: "5554",
+                startDate: "22/05/1995",
+                startDateAmerican: "05/22/1995"
+            }]
+        }
+        var x = $('body').htmlgrid();
+        x.tableCreate("example-table", obj);
+
+        // });
+    </script>
+
 </body>
 
 </html>
