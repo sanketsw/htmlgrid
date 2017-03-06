@@ -1,46 +1,78 @@
-.htmlgrid-table td {
-  width: 100px;
-  height: 100px;
-  text-align: center;
-  vertical-align: middle;
-  background-color: white;
+
+
+.highlighted {
+    border: 3px solid #0d8bca !important;
 }
 
-table tr.highlighted {
-  background-color: #999;
-  color: red;
+.htmlgrid-input {
+    border: 0px solid gray;
+    width: 100%;
+}
+
+.htmlgrid-table-body td {
+    font-family: verdana;
+    font-size: 11px;
+    border: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+.htmlgrid-div {
+  height:220px;
+  overflow-y: auto;
+  padding-top: 1px;
+}
+
+body {
+  background-color: #efefce;
+}
+
+
+.htmlgrid-table-footer {
+  BACKGROUND-COLOR: #DDDDDD;
+  COLOR: #000000;
+  FONT-FAMILY: Arial, Helvetica, San Serif;
+  FONT-SIZE: 11px;
+  font-weight: bold;
+}
+
+.rowNumberColumn {
+  background-color: #e6e6e6!important;
+}
+
+.htmlgrid-paging-table {
+  background-color: gray!important;
 }
 
 table td.selectedCell {
-  background-color: #999;
-  color: blue;
+    background-color: blue;
+    color: blue;
 }
 
 table td.readOnlyCell {
-  background-color: beige;
+    background-color: beige;
 }
+
 
 table td.cellEditing {
-  background-color: black;
-  color: blue;
+    background-color: black;
+    color: blue;
 }
 
-root {
+
+/*root {
   display: block;
-}
+}*/
 
 th.sortable {
-  color: #666;
-  cursor: pointer;
-  text-decoration: underline;
+    color: #666;
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 th.sortable:hover {
-  color: black;
+    color: black;
 }
 
-th.sorted-asc,
-th.sorted-desc {
-  color: black;
-  background-color: cadetblue;
+th.sorted-asc, th.sorted-desc {
+    color: black;
+    background-color: cadetblue;
 }
