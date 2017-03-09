@@ -1,5 +1,3 @@
-
-
 .highlighted {
     border: 3px solid #0d8bca !important;
 }
@@ -16,30 +14,95 @@
 }
 
 .htmlgrid-div {
-  height:220px;
-  overflow-y: auto;
-  padding-top: 1px;
+    height: 220px;
+    overflow-y: auto;
+    padding-top: 1px;
+}
+
+#infoDiv {
+    color: white;
+    font-family: verdana;
+    font-size: 11px;
+}
+
+.selectRange {
+  background-color: #f7f7af;
 }
 
 body {
-  background-color: #efefce;
+    background-color: #efefce;
 }
 
+.selectedRow td {
+    background-color: #f1f1f1;
+    filter: brightness(80%);
+}
+
+.selectedRow input {
+    background-color: #f1f1f1;
+    filter: brightness(80%);
+}
+
+.selectedRow .readOnlyCell {
+    background-color: #e4e4cd;
+    filter: brightness(80%);
+}
+
+.selectedRow .rowNumberColumn {
+    background-color: #d0d0d0!important;
+    filter: brightness(80%);
+}
 
 .htmlgrid-table-footer {
-  BACKGROUND-COLOR: #DDDDDD;
-  COLOR: #000000;
-  FONT-FAMILY: Arial, Helvetica, San Serif;
-  FONT-SIZE: 11px;
-  font-weight: bold;
+    BACKGROUND-COLOR: #DDDDDD;
+    COLOR: #000000;
+    FONT-FAMILY: Arial, Helvetica, San Serif;
+    FONT-SIZE: 11px;
+    font-weight: bold;
 }
 
 .rowNumberColumn {
-  background-color: #e6e6e6!important;
+    background-color: #e6e6e6!important;
 }
 
 .htmlgrid-paging-table {
-  background-color: gray!important;
+    background-color: gray!important;
+}
+
+#overlay {
+    visibility: hidden;
+    position: absolute;
+    left: 20%;
+    top: 100px;
+    width: 500px;
+    height: auto;
+    text-align: center;
+    z-index: 999;
+    border: 1px solid #aaaaaa;
+    background: #ffffff url("images/ui-bg_flat_75_ffffff_40x100.png") 50% 50% repeat-x;
+    color: #222222;
+}
+
+#overlay-body {
+    display: inline-block;
+    padding: 20px;
+    font-family: verdana;
+    font-size: 11px;
+}
+
+#overlay-body td {
+    font-family: verdana;
+    font-size: 11px;
+}
+
+.close {
+    float: right;
+    font-family: verdana;
+    font-size: 20px;
+    font-weight: bold;
+    /*background-color: #f1f1f1;*/
+    padding-left: 2px;
+    padding-right: 2px
 }
 
 table td.selectedCell {
@@ -50,7 +113,6 @@ table td.selectedCell {
 table td.readOnlyCell {
     background-color: beige;
 }
-
 
 table td.cellEditing {
     background-color: black;
